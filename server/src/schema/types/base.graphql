@@ -1,0 +1,8 @@
+
+enum Borough {
+    B
+    K
+    M
+    Q
+    S
+}

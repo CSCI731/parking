@@ -1,0 +1,13 @@
+type Regulation {
+    boro: Borough!
+    main_st: String!
+    from_st: String!
+    to_st: String!
+    distance: Int!
+    arrowPt: String
+    description: String
+}
+
+type Query {
+    regulations: [Regulation]
+}
