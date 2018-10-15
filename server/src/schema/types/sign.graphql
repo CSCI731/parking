@@ -1,4 +1,3 @@
-
 type Sign {
     _id: ID!
     boro: Borough!
@@ -11,5 +10,5 @@ type Sign {
 }
 
 type Query {
-    signs: [Sign]
+    signsByStreet(boro: String!, main_st:String!, from_st: String!, to_st: String!): [Sign]
 }

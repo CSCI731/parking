@@ -4,18 +4,21 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "eslint ./",
+    "lint": "eslint ./; exit 0",
     "test": "jest -i --verbose --coverage --runInBand",
+    "clean": "rm -rf ./node_modules/.cache/babel-loader && rm -rf build",
     "build": "babel src -d build --copy-files --source-maps inline",
-    "build:watch": "babel src -d build --watch --copy-files --source-maps inline",
-    "server": "rm -rf ./node_modules/.cache/babel-loader && nodemon -r dotenv/config build/index.js",
-    "start": "npm-run-all --parallel build:watch server"
+    "watch:build": "babel src -d build --watch --copy-files --source-maps inline",
+    "server": "node -r dotenv/config build/index.js",
+    "watch:server": "nodemon -r dotenv/config build/index.js",
+    "start": "npm-run-all clean build -p watch:*"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@babel/runtime": "^7.1.2",
+    "@google/maps": "^0.5.5",
     "apollo-server-express": "^2.1.0",
     "body-parser": "^1.18.3",
     "cors": "^2.8.4",
@@ -23,6 +26,7 @@
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
     "express-graphql": "^0.6.12",
+    "geonames.js": "^2.1.0",
     "graphql": "^0.13.0",
     "graphql-server-express": "^1.4.0",
     "graphql-tag": "^2.1.0",
@@ -34,6 +38,7 @@
     "morgan": "^1.9.1",
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
+    "street-types": "^1.0.1",
     "superagent": "^4.0.0-beta.5"
   },
   "devDependencies": {

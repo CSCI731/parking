@@ -17,5 +17,6 @@ type Location {
 
 type Query {
     location(_id: String): Location
+    locationsByLatLng(lat: Float!, lng: Float!): [Location]
     locations(boro: Borough, main_st:String): [Location]
 }

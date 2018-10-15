@@ -29,6 +29,7 @@ if (process.env.NODE_ENV === 'dev') {
   }));
 }
 
+
 app.all('*', (request, response) => {
   log('Returning a 404 from the catch-all route');
   return response.sendStatus(404);

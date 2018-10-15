@@ -1,19 +1,16 @@
-import find from 'lodash/find';
-import findIndex from 'lodash/findIndex';
+
+
+/**
+ * File: street.js
+ * Project: NYCParking
+ * File Created: 15 October 2018 10:45 AM
+ * Author: Justin Li (jli@arising.net)
+ * -----
+ */
 import streetTypes from 'street-types';
-import Location from 'model/location';
-import Sign from 'model/sign';
-import Geonames from 'geonames.js';
+import find from "lodash/find";
 
-const geonames = new Geonames({ username: process.env.GN_USERNAME, lan: 'en', encoding: 'JSON' });
-
-const log = require('debug')('regulation');
-const googleMapsClient = require('@google/maps').createClient({
-  key: process.env.GMAPS_API_KEY,
-  Promise,
-});
-
-const standardizeStreetName = (streetName) => {
+export const standardizeStreetName = (streetName) => {
   // remove ordinals from street names (e.g. 145th Ave => 145 Ave)
   const ordinalRE = /(?<=[0-9])(?:st|nd|rd|th)/i;
   let formattedStreetName = streetName.replace(ordinalRE, '');
@@ -23,7 +20,7 @@ const standardizeStreetName = (streetName) => {
 
   if (components.length > 1) {
     const abbr = components.pop();
-
+    console.log(abbr);
     const streetType = find(streetTypes, type => type.standardAbbr === abbr.toUpperCase());
 
     if (streetType) {
@@ -34,15 +31,10 @@ const standardizeStreetName = (streetName) => {
   }
 
   // to upper case
-  const result = formattedStreetName.toUpperCase();
-  log(result);
-  return result;
+  return formattedStreetName.toUpperCase();
 };
 
-const Query = {};
-
-Query.regulations = async (root, args) => {
-  return [];
+export default  {
+  standardizeStreetName,
 };
 
-export default Query;

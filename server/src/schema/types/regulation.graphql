@@ -8,6 +8,7 @@ type Regulation {
     description: String
 }
 
+
 type Query {
-    regulations: [Regulation]
+    regulations(main_st: String!, from_st:String!, to_st: String! ): [Regulation]
 }
