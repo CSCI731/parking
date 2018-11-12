@@ -1,14 +1,10 @@
-
-
 /**
  * File: street.js
  * Project: NYCParking
- * File Created: 15 October 2018 10:45 AM
- * Author: Justin Li (jli@arising.net)
  * -----
  */
 import streetTypes from 'street-types';
-import find from "lodash/find";
+import find from 'lodash/find';
 
 export const standardizeStreetName = (streetName) => {
   // remove ordinals from street names (e.g. 145th Ave => 145 Ave)
@@ -20,7 +16,6 @@ export const standardizeStreetName = (streetName) => {
 
   if (components.length > 1) {
     const abbr = components.pop();
-    console.log(abbr);
     const streetType = find(streetTypes, type => type.standardAbbr === abbr.toUpperCase());
 
     if (streetType) {
@@ -34,7 +29,6 @@ export const standardizeStreetName = (streetName) => {
   return formattedStreetName.toUpperCase();
 };
 
-export default  {
+export default {
   standardizeStreetName,
 };
-
