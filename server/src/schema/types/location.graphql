@@ -15,8 +15,14 @@ type Location {
     sos: SideOfStreet!
 }
 
+type StreetNames {
+    boro: String!
+    streetNames: [String!]
+}
+
 type Query {
-    location(_id: String): Location
-    locationsByLatLng(lat: Float!, lng: Float!): [Location]
-    locations(boro: Borough, main_st:String): [Location]
+    location(_id: String, boro: Borough, main_st: String, from_st: String): Location
+    locationsByLatLng(lat: Float!, lng: Float!): StreetNames!
+    locations(boro: Borough, main_st:String, from_st: String, to_st: String): [Location]
+    reverseGeocode(lat: Float!, lng: Float!):String
 }
