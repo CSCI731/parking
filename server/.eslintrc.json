@@ -1,8 +1,6 @@
 {
   "parser": "babel-eslint",
   "env": {
-    "browser": true,
-    "es6": true,
     "node": true,
     "jest": true
   },
@@ -15,7 +13,7 @@
     }
   },
   "extends": [
-    "airbnb"
+    "eslint:recommended"
   ],
   "rules": {
     "no-unused-vars": [
@@ -34,7 +32,6 @@
       "off",
       "never"
     ],
-    "no-console": "off",
     "no-underscore-dangle": [
       "error",
       {
