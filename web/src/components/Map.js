@@ -1,151 +1,81 @@
+/**
+ * File: Map.js
+ * Project: NYCParking
+ * -----
+ */
 /* global google:false */
 
-import React from 'react';
-import get from 'lodash/get';
-import { connect } from 'react-redux';
-import uiActions from '../redux/actions/ui';
-import locationActions from '../redux/actions/locations';
-import PropTypes from 'prop-types';
-import { geolocated, geoPropTypes } from 'react-geolocated';
+import React from "react";
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu'
 import withStyles from '@material-ui/core/styles/withStyles';
-import Loading from '../views/Loading';
-import {
-  withScriptjs,
-  withGoogleMap,
-  GoogleMap,
-  Marker,
-  InfoWindow,
-} from 'react-google-maps';
+import PropTypes from 'prop-types';
+import { GoogleMap, InfoWindow, Marker, withGoogleMap, withScriptjs } from "react-google-maps";
+import SearchBox from 'react-google-maps/lib/components/places/SearchBox';
 
 const styles = {
-  search: {
-    boxSizing: 'border-box',
-    border: '1px solid transparent',
-    width: '240px',
-    height: '32px',
-    marginTop: '27px',
-    padding: '0 12px',
-    borderRadius: '3px',
-    boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
-    fontSize: '14px',
-    outline: 'none',
-    textOverflow: 'ellipses',
+  searchBox: {
+    left: `10px`,
+  },
+  searchInput: {
+    boxSizing: `border-box`,
+    border: `1px solid transparent`,
+    width: `240px`,
+    height: `32px`,
+    marginTop: `27px`,
+    padding: `0 12px`,
+    borderRadius: `3px`,
+    boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+    fontSize: `14px`,
+    outline: `none`,
+    textOverflow: `ellipses`,
   }
 };
 
-const mapStateToProps = state => ({
-  ui: state.ui,
-});
-
-const mapDispatchToProps = dispatch => ({
-  openSidebar: () => dispatch(uiActions.openSidebar()),
-  closeSidebar: () => dispatch(uiActions.closeSidebar()),
-  locationsByLatLng: (lat, lng) => dispatch(locationActions.locationsByLatLng(lat, lng)),
-});
-
-
-const { SearchBox } = require('react-google-maps/lib/components/places/SearchBox');
-
 class Map extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      isOpen: false,
-      bounds: null,
-      center: props.center,
-      marker: props.marker,
-    };
-  }
-
-
-  toggleInfoWindow = () => {
-    const { isOpen } = this.state;
-    this.setState({
-      isOpen: !isOpen
-    });
+  state = {
+    bounds: null,
+    infoWindowOpen: false,
   };
+
+  componentDidMount() {
+    const { locationsByLatLng, center } = this.props;
+    locationsByLatLng(center.lat, center.lng);
+  }
 
   handleMapBoundsChanged = () => {
     this.setState({
       bounds: this.map.getBounds(),
-      center: this.map.getCenter(),
-    })
+    });
   };
 
-  handlePlacesChanged = () => {
-    const { openSidebar, locationsByLatLng } = this.props;
-    const { marker } = this.state;
-    const places = this.searchBox.getPlaces();
-    const bounds = new google.maps.LatLngBounds();
-    console.log('place changed');
-    places.forEach(place => {
-      if (place.geometry.viewport) {
-        bounds.union(place.geometry.viewport);
-      } else {
-        bounds.extend(place.geometry.location);
-      }
-    });
-
-
-    const markers = places.map(place => ({
-      position: place.geometry.location
-    }));
-
-    const nextMarker = get(markers, '0.position', marker);
-
-    locationsByLatLng(nextMarker.lat(), nextMarker.lng());
+  toggleInfoWindow = () => {
+    const { infoWindowOpen } = this.state;
     this.setState({
-      center: nextMarker,
-      marker: nextMarker,
+      infoWindowOpen: !infoWindowOpen,
     });
   };
-
 
   render() {
     const {
-      isGeolocationAvailable,
-      isGeolocationEnabled,
-      coords,
+      center,
+      marker,
       classes,
+      menuIsOpen,
+      openMenu,
+      handlePlacesChanged,
     } = this.props;
-    const { center, bounds, marker } = this.state;
-
-    const { isOpen } = this.state;
-    if (!isGeolocationAvailable) {
-      return <div>Your browser does not support GeoLocation</div>;
-    }
-
-    if (!isGeolocationEnabled) {
-      return <div>GeoLocation is not enabled</div>;
-    }
-
-    if (!coords) {
-      return <Loading />;
-    }
-
-    let defaultCenter;
-
-    if (center) {
-      defaultCenter = center;
-    } else {
-      defaultCenter = { lat: coords.latitude, lng: coords.longitude };
-    }
-
-    let defaultMarker;
-    if (marker) {
-      defaultMarker = marker;
-    } else {
-      defaultMarker = { lat: coords.latitude, lng: coords.longitude };
-    }
-
+    const { infoWindowOpen, bounds } = this.state;
     return (
       <GoogleMap
         ref={(c) => {
           this.map = c;
         }}
         defaultZoom={16}
-        center={defaultCenter}
+        defaultCenter={center}
+        center={center}
         defaultOptions={{
+          zoomControl: false,
           scaleControl: false,
           streetViewControl: false,
           mapTypeControl: false,
@@ -153,67 +83,56 @@ class Map extends React.Component {
         onBoundsChanged={this.handleMapBoundsChanged}
       >
         <SearchBox
+          className={classes.searchBox}
           bounds={bounds}
           controlPosition={google.maps.ControlPosition.TOP_LEFT}
-          onPlacesChanged={this.handlePlacesChanged}
+          onPlacesChanged={() => handlePlacesChanged(this.map, this.searchBox)}
           ref={(c) => {
             this.searchBox = c;
           }}
         >
-          <input
-            type="text"
-            className={classes.search}
-            placeholder="Enter a location"
-          />
+          <div style={{ left: '20px' }}>
+            <input
+              type="text"
+              className={classes.searchInput}
+              placeholder="Search"
+              ref={(c) => {
+                this.searchInput = c;
+              }}
+            />
+            {!menuIsOpen &&
+            <IconButton onClick={openMenu}>
+              <MenuIcon />
+            </IconButton>
+            }
+          </div>
         </SearchBox>
+        {marker &&
         <Marker
-          position={defaultMarker}
+          position={marker}
           onClick={this.toggleInfoWindow}
         >
-          {isOpen &&
+          {infoWindowOpen &&
           <InfoWindow onCloseClick={this.toggleInfoWindow}>
             <div>You are here</div>
           </InfoWindow>
           }
         </Marker>
+        }
       </GoogleMap>
-    )
+    );
   }
 }
 
-
-Map.defaultProps = {
-  center: null,
-  marker: null,
-};
-
 Map.propTypes = {
-  ui: PropTypes.shape({showSideBar: PropTypes.bool.isRequired}).isRequired,
-  openSidebar: PropTypes.func.isRequired,
-  closeSidebar: PropTypes.func.isRequired,
-  locationsByLatLng: PropTypes.func.isRequired,
+  marker: PropTypes.shape({}),
+  center: PropTypes.shape({}),
   classes: PropTypes.shape({}).isRequired,
-  center: PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired,
-  }),
-  marker: PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired,
-  }),
+  menuIsOpen: PropTypes.bool.isRequired,
+  openMenu: PropTypes.func.isRequired,
+  locationsByLatLng: PropTypes.func.isRequired,
+  handlePlacesChanged: PropTypes.func.isRequired,
 };
 
-Map.propTypes = { ...Map.propTypes, ...geoPropTypes };
-
-const connectedMap = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Map);
-
-export default geolocated({
-  positionOptions: {
-    enableHighAccuracy: true,
-  },
-  userDecisionTimeout: 5000,
-})(withScriptjs(withGoogleMap(withStyles(styles)(connectedMap))));
+export default withScriptjs(withGoogleMap(withStyles(styles)(Map)));
 
