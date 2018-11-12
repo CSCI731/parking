@@ -1,8 +1,8 @@
 import cors from 'cors';
 import debug from 'debug';
 import morgan from 'morgan';
-import { graphqlExpress, graphiqlExpress } from 'graphql-server-express';
 import express from 'express';
+import { ApolloServer } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
 import schema from '../schema';
@@ -14,21 +14,13 @@ const log = debug('server');
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/nycparking';
 
-mongoose.Promise = Promise;
+mongoose.Promise = global.Promise;
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 app.use(bodyParser.json(), cors());
 
-app.use('/graphql', graphqlExpress({
-  schema,
-}));
-
-if (process.env.NODE_ENV === 'dev') {
-  app.use('/graphiql', graphiqlExpress({
-    endpointURL: '/graphql',
-  }));
-}
-
+const server = new ApolloServer(schema);
+server.applyMiddleware({ app });
 
 app.all('*', (request, response) => {
   log('Returning a 404 from the catch-all route');
@@ -44,7 +36,7 @@ export const start = () => {
 
 export const stop = () => {
   app.close(PORT, () => {
-    console.log(`Shut down on port: ${PORT}`);
+    log(`Shut down on port: ${PORT}`);
   });
 };
 
