@@ -1,7 +1,7 @@
 import types from '../types' ;
 
 const initState = {
-  sings: [],
+  signs: [],
 };
 
 const signs = (state = initState, action) => {

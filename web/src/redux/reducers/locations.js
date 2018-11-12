@@ -5,48 +5,63 @@
  * Author: Justin Li (jli@arising.net)
  * -----
  */
-
+import map from 'lodash/map';
+import sortBy from 'lodash/sortBy';
+import uniq from 'lodash/uniq';
 import types from '../types';
 
+
 const initState = {
-  main: {},
-  from: {},
-  to: {},
+  main: [],
+  from: [],
+  to: [],
   boro: null,
+  currentPosition: null,
 };
 
 const locations = (state = initState, action) => {
   const { type } = action;
   switch (type) {
-    case types.LOCATIONS_BY_LATLNG:
+    case types.LOCATIONS_BY_LATLNG: {
       const { payload } = action;
-      const main = {};
-      const from = {};
-      const to = {};
-      const boro = payload[0].boro;
-      payload.forEach(location => {
-        if (!main[location.main_st]) {
-          main[location.main_st] = { value: location.main_st, label: location.main_st };
-        }
-
-        if (!from[location.main_st]) {
-          from[location.main_st] = [{ value: location.from_st, label: location.from_st }];
-        } else {
-          from[location.main_st].push({ value: location.from_st, label: location.from_st });
-        }
-
-        // to[location.main_st] = { [location.from_st]: { value: location.to_st, label: location.to_st } };
-        if (!to[location.main_st]) {
-          to[location.main_st] = { [location.from_st]: { value: location.to_st, label: location.to_st } };
-        } else {
-          to[location.main_st][location.from_st] = { value: location.to_st, label: location.to_st };
-        }
+      const main = payload.streetNames.map(street => {
+        return { value: street, label: street };
       });
       return {
-        boro,
-        main,
+        ...state,
+        boro: payload.boro,
+        main: main,
+        from: [],
+        to:[],
+      };
+    }
+    case types.GET_FROM_STREETS: {
+      const { payload } = action;
+      const from = uniq(map(sortBy(payload, 'from_st'), 'from_st')).map(from_st => {
+        return { value: from_st, label: from_st };
+      });
+
+      return {
+        ...state,
         from,
+        to: [],
+      }
+    }
+    case types.GET_TO_STREETS: {
+      const { payload } = action;
+      const to = uniq(map(sortBy(payload, 'to_st'), 'to_st')).map(to_st => {
+        return { value: to_st, label: to_st };
+      });
+
+      return {
+        ...state,
         to,
+      }
+    }
+    case types.REVERSE_GEOCODE:
+      return {
+        ...state,
+        currentPosition: action.payload,
       };
     default:
       return state;

@@ -11,12 +11,13 @@ import thunk from 'redux-thunk';
 import logger from 'redux-logger';
 import rootReducer from './reducers';
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const middleWares = [thunk];
 
 if (process.env.REACT_APP_NODE_ENV === 'dev') {
   middleWares.push(logger);
 }
 
-const store = createStore(rootReducer, compose(applyMiddleware(...middleWares)));
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(...middleWares)));
 
 export default store;

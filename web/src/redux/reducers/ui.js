@@ -8,19 +8,19 @@
 import types from '../types';
 
 const initState = {
-  showSideBar: false,
+  menuIsOpen: true,
 };
 
 const ui = (state = initState, action) => {
   const { type } = action;
   switch (type) {
-    case types.OPEN_SIDEBAR:
+    case types.OPEN_MENU:
       return {
-        showSideBar: true,
+        menuIsOpen: true,
       };
-    case types.CLOSE_SIDEBAR:
+    case types.CLOSE_MENU:
       return {
-        showSideBar: false,
+        menuIsOpen: false,
       };
     default:
       return state;

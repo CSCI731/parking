@@ -8,7 +8,7 @@ export const signsByStreet = (boro, mainSt, fromSt, toSt) => {
   return function (dispatch) {
 
     const query = `
-      query SignsByStreet ($boro: String!, $main_st: String!, $from_st: String!, $to_st: String) {
+      query SignsByStreet ($boro: String!, $main_st: String!, $from_st: String!, $to_st: String!) {
         signsByStreet(boro:$boro, main_st:$main_st, from_st:$from_st, to_st:$to_st) {
           _id,
           boro,
@@ -28,7 +28,6 @@ export const signsByStreet = (boro, mainSt, fromSt, toSt) => {
 
     apolloFetch({ query, variables })
       .then((res) => {
-        console.log(res);
         dispatch({
           type: types.SIGNS_BY_STREET,
           payload: res.data.signsByStreet,

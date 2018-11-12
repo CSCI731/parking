@@ -8,24 +8,25 @@
 
 import types from '../types';
 
-export const openSidebar = () => {
+export const openMenu = () => {
   return function (dispatch) {
     return dispatch({
-      type: types.OPEN_SIDEBAR,
+      type: types.OPEN_MENU,
     });
   }
 };
 
-export const closeSidebar = () => {
+export const closeMenu = () => {
   return function (dispatch) {
     return dispatch({
-      type: types.CLOSE_SIDEBAR,
+      type: types.CLOSE_MENU,
     });
   }
 };
 
 export default {
-  openSidebar,
-  closeSidebar,
-}
+  openMenu,
+  closeMenu,
+};
+
 
