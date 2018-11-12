@@ -17,7 +17,12 @@ const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/nycparking';
 mongoose.Promise = global.Promise;
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
-app.use(bodyParser.json(), cors());
+const corsOptions = {
+  origin: process.env.CORS_ORIGINS,
+  optionsSuccessStatus: 200,
+};
+
+app.use(bodyParser.json(), cors(corsOptions));
 
 const server = new ApolloServer(schema);
 server.applyMiddleware({ app });
