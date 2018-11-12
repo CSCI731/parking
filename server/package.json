@@ -4,20 +4,19 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "prestart": "npm run -s build",
+    "start": "node -r dotenv/config dist/index.js ",
+    "dev": "nodemon src/index.js --exec \" node -r dotenv/config -r @babel/register\"",
+    "clean": "rimraf dist",
+    "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
+    "test": "jest --watch",
     "lint": "eslint ./; exit 0",
-    "test": "jest -i --verbose --coverage --runInBand",
-    "clean": "rm -rf ./node_modules/.cache/babel-loader && rm -rf build",
-    "build": "babel src -d build --copy-files --source-maps inline",
-    "watch:build": "babel src -d build --watch --copy-files --source-maps inline",
-    "server": "node -r dotenv/config build/index.js",
-    "watch:server": "nodemon -r dotenv/config build/index.js",
-    "start": "npm-run-all clean build -p watch:*"
+    "lint:fix": "eslint ./ --fix; exit 0"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@babel/runtime": "^7.1.2",
     "@google/maps": "^0.5.5",
     "apollo-server-express": "^2.1.0",
     "body-parser": "^1.18.3",
@@ -45,7 +44,8 @@
     "@babel/cli": "^7.1.2",
     "@babel/core": "^7.1.2",
     "@babel/preset-env": "^7.1.0",
-    "babel-core": "^6.26.3",
+    "@babel/register": "^7.0.0",
+    "babel-core": "^7.0.0-bridge.0",
     "babel-eslint": "^10.0.1",
     "babel-jest": "^23.6.0",
     "babel-plugin-dynamic-import-node": "^2.1.0",
@@ -54,7 +54,7 @@
     "babel-plugin-transform-class-properties": "^6.24.1",
     "eslint": "^5.6.1",
     "eslint-config-airbnb": "^17.1.0",
-    "eslint-import-resolver-babel-module": "^4.0.0",
+    "eslint-import-resolver-babel-module": "^5.0.0-beta.1",
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jest": "^21.22.1",
     "eslint-plugin-jsx-a11y": "^6.1.1",
@@ -62,6 +62,7 @@
     "jest": "^23.6.0",
     "jest-cli": "^23.6.0",
     "nodemon": "^1.18.4",
-    "npm-run-all": "^4.1.3"
+    "npm-run-all": "^4.1.3",
+    "rimraf": "^2.6.2"
   }
 }
