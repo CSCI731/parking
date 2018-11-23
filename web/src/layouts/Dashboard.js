@@ -1,33 +1,22 @@
-import CssBaseline from '@material-ui/core/CssBaseline';
 import React from 'react';
-import withStyles from '@material-ui/core/styles/withStyles';
-import PropTypes from 'prop-types';
-import MenuContainer from '../containers/Menu';
-import DashboardContainer from '../containers/Dashboard';
-
-const styles = () => ({
-  root: {
-    display: 'flex',
-  },
-});
+import GeoMap from '../components/GeoMap';
 
 
-const Dashboard = (props) => {
-  const { classes } = props;
-  return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <MenuContainer />
-      <DashboardContainer />
-    </div>
-  );
-};
+class Dashboard extends React.Component {
 
-Dashboard.propTypes = {
-  classes: PropTypes.shape({}).isRequired,
-};
+  render() {
+    return (
+      <div style={{ minHeight: 360 }}>
+        <GeoMap />
+      </div>
+    );
+  }
+}
 
-export default withStyles(styles)(Dashboard);
+
+Dashboard.propTypes = {};
+
+export default Dashboard;
 
 
 
