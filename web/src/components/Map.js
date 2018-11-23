@@ -69,7 +69,6 @@ class Map extends React.Component {
             enterButton
             autoFocus
             placeholder="Search"
-            onSearch={value => console.log(value)}
             style={{
               width: '340px',
               marginTop: '27px',

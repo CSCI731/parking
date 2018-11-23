@@ -8,6 +8,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Layout, Select, Form } from "antd";
+import CrossStreet1 from '../containers/CrossStreet1';
 
 const { Sider } = Layout;
 const FormItem = Form.Item;
@@ -26,12 +27,14 @@ class SideBar extends React.Component {
   };
 
   handleOnStreetChange = (value) => {
-    console.log("OnChange", value);
+    this.setState({
+      onStreet: value,
+    });
   };
 
   render() {
     const { loading, locationsByLatLng, error } = this.props;
-    const { collapsed, } = this.state;
+    const { collapsed, onStreet } = this.state;
     return (
       <Sider
         collapsible
@@ -64,7 +67,9 @@ class SideBar extends React.Component {
               ))}
             </Select>
           </FormItem>
-
+          <CrossStreet1
+            boro={locationsByLatLng && locationsByLatLng.boro}
+            onStreet={onStreet} />
         </Form>
       </Sider>
     );
