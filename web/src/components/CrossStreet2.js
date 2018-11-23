@@ -7,10 +7,9 @@ import { Form, message, Select } from 'antd';
 const FormItem = Form.Item;
 const Option = Select.Option;
 
-class CrossStreet1 extends React.Component {
-
+class CrossStreet2 extends React.Component {
   render() {
-    const { crossStreet1, onChange, data: { loading, error, locations } } = this.props;
+    const { crossStreet2, onChange, data: { loading, error, locations } } = this.props;
     if (error) {
       const msg = (error.graphQLErrors.length > 0 && error.graphQLErrors.map(({ message }) => (
         message
@@ -20,7 +19,7 @@ class CrossStreet1 extends React.Component {
 
     return (
       <FormItem
-        label={<span style={{ color: '#fff' }}>Cross Street 1</span>}
+        label={<span style={{ color: '#fff' }}>Cross Street 2</span>}
         style={{
           paddingLeft: '16px',
           paddingRight: '16px',
@@ -29,12 +28,12 @@ class CrossStreet1 extends React.Component {
         <Select
           showSearch
           allowClear
-          value={crossStreet1}
+          value={crossStreet2}
           defaultActiveFirstOption
           placeholder={loading ? 'Loading...' : 'Search'}
           onChange={onChange}
         >
-          {locations && uniq(map(locations, 'from_st')).map(location => (
+          {locations && uniq(map(locations, 'to_st')).map(location => (
             <Option key={location} value={location}>{location}</Option>
           ))}
         </Select>
@@ -43,12 +42,12 @@ class CrossStreet1 extends React.Component {
   }
 }
 
-CrossStreet1.propTypes = {
+CrossStreet2.propTypes = {
   onStreet: PropTypes.string,
+  crossStreet2: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  crossStreet1: PropTypes.string,
 };
 
-export default CrossStreet1;
+export default CrossStreet2;
 
 
