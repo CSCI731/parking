@@ -8,7 +8,7 @@
 import types from '../types';
 
 const initState = {
-  menuIsOpen: true,
+  sideBarCollapsed: false,
 };
 
 const ui = (state = initState, action) => {
@@ -16,11 +16,11 @@ const ui = (state = initState, action) => {
   switch (type) {
     case types.OPEN_MENU:
       return {
-        menuIsOpen: true,
+        sideBarCollapsed: false,
       };
     case types.CLOSE_MENU:
       return {
-        menuIsOpen: false,
+        sideBarCollapsed: true,
       };
     default:
       return state;
