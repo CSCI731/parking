@@ -41,13 +41,13 @@ class Dashboard extends React.Component {
   render() {
     const {
       classes,
-      menuIsOpen,
+      sideBarCollapsed,
     } = this.props;
 
 
     return (
       <main className={classNames(classes.content, {
-        [classes.contentShift]: menuIsOpen
+        [classes.contentShift]: sideBarCollapsed
       })}>
         <ParkingMap />
       </main>
@@ -57,7 +57,7 @@ class Dashboard extends React.Component {
 
 
 Dashboard.propTypes = {
-  menuIsOpen: PropTypes.bool.isRequired,
+  sideBarCollapsed: PropTypes.bool.isRequired,
   classes: PropTypes.shape({}).isRequired,
 };
 

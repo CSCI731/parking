@@ -41,5 +41,5 @@ export const signsByStreet = (boro, mainSt, fromSt, toSt) => {
 
 export default {
   signsByStreet,
-}
+};
  

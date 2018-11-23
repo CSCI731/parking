@@ -6,7 +6,7 @@ import DashboardView from '../views/Dashboard';
 
 const mapStateToProps = state => {
   return {
-    menuIsOpen: state.ui.menuIsOpen,
+    sideBarCollapsed: state.ui.sideBarCollapsed,
     boro: state.locations.boro,
     main: state.locations.main,
     from: state.locations.from,

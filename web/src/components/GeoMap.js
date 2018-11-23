@@ -3,20 +3,19 @@
  * Project: NYCParking
  * -----
  */
-
 /* global google:false */
 
-import get from 'lodash/get';
 import React from 'react';
-import Map from '../containers/Map';
+import ParkingMap from '../containers/ParkingMap';
 import { geolocated, geoPropTypes } from 'react-geolocated';
+import get from "lodash/get";
 
 const QueensCollege = { lat: 40.7353648, lng: -73.8152625 };
 
 class GeoMap extends React.Component {
   state = {
-    bounds: null,
     center: null,
+    address: 'You are here',
   };
 
   handlePlacesChanged = (map, searchBox) => {
@@ -30,18 +29,17 @@ class GeoMap extends React.Component {
       }
     });
 
-    const nextCenter = get(places, '0.geometry.location', this.state.center);
-
+    const nextCenter = get(places, '0.geometry.location');
+    const address = get(places, '0.formatted_address', 'You are here');
     this.setState({
-      center: nextCenter,
+      address,
+      center: { lat: nextCenter.lat(), lng: nextCenter.lng() },
     });
   };
 
-
-
   render() {
     const { isGeolocationAvailable, isGeolocationEnabled, coords } = this.props;
-    const { bounds, center } = this.state;
+    const { address, center } = this.state;
 
     if (!isGeolocationAvailable) {
       return <div>Your browser does not support Geolocation</div>;
@@ -54,17 +52,10 @@ class GeoMap extends React.Component {
     const defaultCenter = coords ? { lat: coords.latitude, lng: coords.longitude } : QueensCollege;
 
     return (
-      <Map
-        googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_API_KEY}&libraries=places,geometry`}
-        loadingElement={<div style={{ height: `100%` }} />}
-        containerElement={<div style={{ height: `400px` }} />}
-        mapElement={<div style={{ height: `100%` }} />}
-        handlePlacesChanged={this.handlePlacesChanged}
-        handleMapBoundsChanged={this.handleMapBoundsChanged}
-        defaultCenter={defaultCenter}
+      <ParkingMap
         center={center || defaultCenter}
-        marker={center || defaultCenter}
-        bounds={bounds}
+        address={address}
+        handlePlacesChanged={this.handlePlacesChanged}
       />
     )
   }
@@ -72,9 +63,13 @@ class GeoMap extends React.Component {
 
 GeoMap.propTypes = { ...GeoMap.propTypes, ...geoPropTypes };
 
-export default geolocated({
+const InjectedGeoMap = geolocated({
   positionOptions: {
     enableHighAccuracy: true,
   },
   userDecisionTimeout: 5000,
 })(GeoMap);
+
+export default InjectedGeoMap;
+
+
