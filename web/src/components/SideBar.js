@@ -7,9 +7,11 @@
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Layout, Select, Form } from "antd";
+import isEqual from 'lodash/isEqual';
+import { Layout, Select, Form, } from "antd";
 import CrossStreet1 from '../containers/CrossStreet1';
 import CrossStreet2 from '../containers/CrossStreet2';
+import Regulations from '../containers/Regulations';
 
 const { Sider } = Layout;
 const FormItem = Form.Item;
@@ -17,11 +19,22 @@ const Option = Select.Option;
 
 class SideBar extends React.Component {
   state = {
-    onStreet: null,
+    onStreet: undefined,
     crossStreet1: undefined,
     crossStreet2: undefined,
     collapsed: false,
+    visible: false,
   };
+
+  componentDidUpdate(preProps) {
+    if (!isEqual(this.props.locationsByLatLng, preProps.locationsByLatLng)) {
+      this.setState({
+        onStreet: undefined,
+        crossStreet1: undefined,
+        crossStreet2: undefined,
+      });
+    }
+  }
 
   onCollapse = (collapsed) => {
     this.setState({
@@ -47,13 +60,25 @@ class SideBar extends React.Component {
   handleCrossStreet2Change = (value) => {
     this.setState({
       crossStreet2: value,
+      visible: true,
     });
   };
 
+  handleRegulationClose = () => {
+    this.setState({
+      visible: false,
+    });
+  };
+
+  handleRegulationOpen = () => {
+    this.setState({
+      visible: true,
+    });
+  };
 
   render() {
     const { loading, locationsByLatLng, error } = this.props;
-    const { collapsed, onStreet, crossStreet1, crossStreet2 } = this.state;
+    const { collapsed, visible, onStreet, crossStreet1, crossStreet2 } = this.state;
     return (
       <Sider
         collapsible
@@ -77,6 +102,7 @@ class SideBar extends React.Component {
               showSearch
               allowClear
               defaultActiveFirstOption
+              value={onStreet}
               placeholder={loading ? 'Loading...' : 'Search'}
               onChange={this.handleOnStreetChange}
               disabled={error}
@@ -98,8 +124,19 @@ class SideBar extends React.Component {
             crossStreet1={crossStreet1}
             crossStreet2={crossStreet2}
             onChange={this.handleCrossStreet2Change}
+            onButtonClick={this.handleRegulationOpen}
           />
+
         </Form>
+        <Regulations
+          boro={locationsByLatLng && locationsByLatLng.boro}
+          onStreet={onStreet}
+          crossStreet1={crossStreet1}
+          crossStreet2={crossStreet2}
+          visible={visible}
+          onClose={this.handleRegulationClose}
+        />
+
       </Sider>
     );
   }

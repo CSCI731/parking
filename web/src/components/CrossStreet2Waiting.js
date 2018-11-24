@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Select } from 'antd';
+import { Form, Select, Button, Col, Row, Icon, } from 'antd';
 
 const FormItem = Form.Item;
 
@@ -13,13 +13,20 @@ class CrossStreet2Waiting extends React.Component {
           paddingRight: '16px',
         }}
       >
-        <Select
-          showSearch
-          allowClear
-          defaultActiveFirstOption
-          disabled
-        >
-        </Select>
+        <Row>
+          <Col span={20}>
+            <Select
+              showSearch
+              allowClear
+              defaultActiveFirstOption
+              disabled
+            >
+            </Select>
+          </Col>
+          <Col span={4}>
+            <Button type="primary" htmlType="button" disabled ><Icon type="arrow-right" /></Button>
+          </Col>
+        </Row>
       </FormItem>
     );
   }
