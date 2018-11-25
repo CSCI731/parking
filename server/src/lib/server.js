@@ -18,7 +18,7 @@ mongoose.Promise = global.Promise;
 mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
 
 const corsOptions = {
-  origin: process.env.CORS_ORIGINS,
+  origin: process.env.CORS_ORIGINS.split(','),
   optionsSuccessStatus: 200,
 };
 
