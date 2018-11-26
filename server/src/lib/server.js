@@ -1,6 +1,7 @@
 import cors from 'cors';
 import debug from 'debug';
 import morgan from 'morgan';
+import helmet from 'helmet';
 import express from 'express';
 import fs from 'fs';
 import http from 'http';
@@ -11,6 +12,8 @@ import bodyParser from 'body-parser';
 import schema from '../schema';
 
 const app = express(morgan('combined'));
+app.use(helmet());
+
 const log = debug('server');
 
 // env variables
