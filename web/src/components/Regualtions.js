@@ -2,6 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { List, message, Drawer } from 'antd';
 import map from 'lodash/map';
+import filter from 'lodash/filter';
+
+const blackList = ['Curb Line', 'Building Line', 'Property Line'];
 
 class Regulations extends React.Component {
   render() {
@@ -20,7 +23,9 @@ class Regulations extends React.Component {
 
     let dataSource = [];
     if (signsByStreet) {
-      dataSource = map(signsByStreet, 'description');
+      dataSource = filter(map(signsByStreet, 'description'), function (obj) {
+        return !blackList.includes(obj);
+      });
     }
 
     return (
