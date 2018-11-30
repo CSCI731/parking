@@ -1,23 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-import ReactLoading from 'react-loading';
+import { Spin } from 'antd';
 
-const Loading = ({ type, color, height, width }) => (
-  <ReactLoading type={type} color={color} height={height} width={width} />
+export default () => (
+  <div>
+    <Spin size="large" />
+  </div>
 );
-
-Loading.defaultProps = {
-  type: 'spinningBubbles',
-  color: '#000',
-  height: '20%',
-  width: '20%',
-};
-
-Loading.propTypes = {
-  type: PropTypes.string,
-  color: PropTypes.string,
-  height: PropTypes.string,
-  width: PropTypes.string,
-};
-
-export default Loading;

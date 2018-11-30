@@ -12,6 +12,7 @@ import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import store from '../redux/store';
 import DashboardLayout from './Dashboard';
+import LoginLayout from './LoginLayout';
 
 const httpLink = new HttpLink({
   uri: process.env.REACT_APP_GRAPHQL_SERVER_URI,
@@ -30,6 +31,7 @@ const App = () => {
           <BrowserRouter>
             <Switch>
               <Route exact path="/" component={DashboardLayout} />
+              <Route path="/login" component={LoginLayout} />
             </Switch>
           </BrowserRouter>
         </div>
