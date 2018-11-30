@@ -7,14 +7,17 @@ import fs from 'fs';
 import http from 'http';
 import https from 'https';
 import path from 'path';
-import { ApolloServer } from 'apollo-server-express';
+import jwt from 'jsonwebtoken';
+import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
-import schema from '../schema';
+import UserModel from 'model/user';
+import resolvers from '../schema/resolvers';
+import typeDefs from '../schema/types';
 
 const app = express(morgan('combined'));
 app.use(helmet());
-app.use(express.static(path.join(__dirname , '../../static'), {dotfiles: 'allow'}));
+app.use(express.static(path.join(__dirname, '../../static'), { dotfiles: 'allow' }));
 
 const log = debug('server');
 
@@ -23,21 +26,62 @@ const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/nycparking';
 
 mongoose.Promise = global.Promise;
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI, { useCreateIndex: true, useNewUrlParser: true }, async function (err) {
+  if (err) {
+    log(err.message);
+    throw err;
+  }
+
+  const admin = await UserModel.findOne({ email: 'admin@example.com' });
+
+  if (!admin) {
+    await UserModel.register(
+      { email: 'admin@example.com', roles: ['admin'] },
+      'nycparking',
+    );
+  }
+});
 
 const corsOptions = {
   origin: process.env.CORS_ORIGINS.split(','),
   optionsSuccessStatus: 200,
 };
 
+const getCurrentUser = async (req) => {
+  const authorization = req.headers['authorization'];
+
+  let user;
+  if (authorization) {
+    // "Bearer [token]"
+    const [prefix, token] = authorization.split(' ');
+    if (prefix !== 'Bearer') {
+      throw new AuthenticationError('Invalid header.');
+    }
+
+    try {
+      const data = await jwt.verify(token, process.env.JWT_SECRET);
+      user = await UserModel.findById(data._id);
+    } catch (e) {
+
+    }
+
+    return user;
+  }
+};
+
 app.use(bodyParser.json(), cors(corsOptions));
 
-const apollo = new ApolloServer(schema);
+
+const apollo = new ApolloServer({
+  typeDefs,
+  resolvers,
+  context: async ({ req }) => ({ user: await getCurrentUser(req) })
+});
+
 apollo.applyMiddleware({ app });
 
 let server;
 if (process.env.HTTPS === '1') {
-  console.log('HTTPS', process.env.HTTPS);
   server = https.createServer(
     {
       key: fs.readFileSync(process.env.SSL_KEY, 'utf8'),

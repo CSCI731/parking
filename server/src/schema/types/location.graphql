@@ -26,3 +26,33 @@ type Query {
     locations(boro: Borough, main_st:String, from_st: String, to_st: String): [Location]
     reverseGeocode(lat: Float!, lng: Float!):String
 }
+
+input addLocationInput {
+    _id: ID
+    boro: Borough!
+    order_no: String!
+    main_st: String!
+    from_st: String!
+    to_st:String!
+    sos:SideOfStreet!
+}
+
+input removeLocationInput {
+    _id: ID!
+}
+
+input updateLocationInput {
+    _id: ID!
+    boro: Borough
+    order_no: String
+    main_st: String
+    from_st: String
+    to_st:String
+    sos:SideOfStreet
+}
+
+type Mutation {
+    addLocation(input: addLocationInput!):Location!
+    removeLocation(input: removeLocationInput!):Boolean!
+    updateLocation(input: updateLocationInput!):Location!
+}
