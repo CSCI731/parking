@@ -30,7 +30,7 @@ input locationsInput {
 type Query {
     location(_id: String, boro: Borough, main_st: String, from_st: String): Location
     locationsByLatLng(lat: Float!, lng: Float!): StreetNames!
-    locations(input: locationsInput!): [Location]
+    locations(input: locationsInput!, offset: Int, limit: Int): [Location]
     reverseGeocode(lat: Float!, lng: Float!):String
 }
 

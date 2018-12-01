@@ -22,8 +22,17 @@ Query.location = async (root, args) => {
 };
 
 
-Query.locations = async (root, { input }) => {
-  return await Location.find(input, null, { limit: 50 });
+Query.locations = async (root, { input, offset, limit }) => {
+  const query = Location.find(input);
+  if (offset) {
+    query.skip(offset);
+  }
+
+  if (limit) {
+    query.limit(limit);
+  }
+
+  return query.exec();
 };
 
 Query.reverseGeocode = async (root, args) => {
