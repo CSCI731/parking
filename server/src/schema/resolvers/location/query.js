@@ -22,28 +22,8 @@ Query.location = async (root, args) => {
 };
 
 
-Query.locations = async (root, args) => {
-  const {
-    boro, main_st, from_st, to_st,
-  } = args;
-  const selector = {};
-  if (boro) {
-    selector.boro = boro;
-  }
-
-  if (main_st) {
-    selector.main_st = main_st;
-  }
-
-  if (from_st) {
-    selector.from_st = from_st;
-  }
-
-  if (to_st) {
-    selector.to_st = to_st;
-  }
-
-  return Location.find(selector, null, { limit: 50 }).exec();
+Query.locations = async (root, { input }) => {
+  return await Location.find(input, null, { limit: 50 });
 };
 
 Query.reverseGeocode = async (root, args) => {
