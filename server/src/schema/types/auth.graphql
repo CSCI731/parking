@@ -1,0 +1,11 @@
+type Query {
+    verifyToken(token: String!): User!
+}
+
+type Token {
+    token: String,
+}
+
+type Mutation {
+    login(email: String!, password: String!): Token!
+}

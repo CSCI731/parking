@@ -6,6 +6,7 @@ import Location from 'model/location';
 import Geonames from 'geonames.js';
 import Street from 'lib/street';
 import { createClient } from '@google/maps';
+import { UserInputError } from 'apollo-server-express';
 
 const googleMapsClient = createClient({
   key: process.env.GMAPS_API_KEY,
@@ -18,32 +19,36 @@ const Query = {};
 
 Query.location = async (root, args) => {
   const { _id } = args;
-  return Location.findOne({ _id }).exec();
+  const location = await Location.findById(_id);
+  if (!location) {
+    throw new UserInputError('Location not found.');
+  }
+
+  return location;
 };
 
 
-Query.locations = async (root, args) => {
-  const {
-    boro, main_st, from_st, to_st,
-  } = args;
-  const selector = {};
-  if (boro) {
-    selector.boro = boro;
+Query.locations = async (root, { input, offset, limit }) => {
+  const count = await Location.countDocuments(input);
+
+  const selector = input;
+  if (selector.boro !== undefined) {
+    selector.boro = { $in: selector.boro };
+  }
+  const query = Location.find(selector).sort({ _id: 1 });
+
+  if (offset) {
+    query.skip(offset);
   }
 
-  if (main_st) {
-    selector.main_st = main_st;
+  if (limit) {
+    query.limit(limit);
   }
 
-  if (from_st) {
-    selector.from_st = from_st;
-  }
-
-  if (to_st) {
-    selector.to_st = to_st;
-  }
-
-  return Location.find(selector, null, { limit: 50 }).exec();
+  return {
+    totalCount: count,
+    locations: query.exec(),
+  };
 };
 
 Query.reverseGeocode = async (root, args) => {

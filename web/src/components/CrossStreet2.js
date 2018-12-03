@@ -12,7 +12,7 @@ const Option = Select.Option;
 class CrossStreet2 extends React.Component {
   render() {
     const {
-      crossStreet2, onChange, onButtonClick, data: { loading, error, locations },
+      crossStreet2, onChange, onButtonClick, data: { loading, error, locations: { locations } },
     } = this.props;
     if (error) {
       const msg = (error.graphQLErrors.length > 0 && error.graphQLErrors.map(({ message }) => (

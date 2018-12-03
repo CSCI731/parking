@@ -13,4 +13,8 @@ Query.signsByStreet = async (root, args) => {
   return await Sign.find({ boro, order_no: location.order_no }).sort({ sequence: 1 }).exec();
 };
 
+Query.signs = async (root, { input }) => {
+  return await Sign.find(input).sort({ sequence: 1 });
+};
+
 export default Query;
