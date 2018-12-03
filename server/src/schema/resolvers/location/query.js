@@ -23,7 +23,14 @@ Query.location = async (root, args) => {
 
 
 Query.locations = async (root, { input, offset, limit }) => {
-  const query = Location.find(input);
+  const count = await Location.countDocuments(input);
+
+  const selector = input;
+  if (selector.boro !== undefined) {
+    selector.boro = { $in: selector.boro };
+  }
+  const query = Location.find(selector).sort({ _id: 1 });
+
   if (offset) {
     query.skip(offset);
   }
@@ -32,7 +39,10 @@ Query.locations = async (root, { input, offset, limit }) => {
     query.limit(limit);
   }
 
-  return query.exec();
+  return {
+    totalCount: count,
+    locations: query.exec(),
+  };
 };
 
 Query.reverseGeocode = async (root, args) => {
