@@ -10,13 +10,14 @@ const Option = Select.Option;
 class CrossStreet1 extends React.Component {
 
   render() {
-    const { crossStreet1, onChange, data: { loading, error, locations: { locations } } } = this.props;
+    const { crossStreet1, onChange, data: { loading, error, locations} } = this.props;
     if (error) {
       const msg = (error.graphQLErrors.length > 0 && error.graphQLErrors.map(({ message }) => (
         message
       ))) || [error.message];
       message.error(msg.join('<br/>'));
     }
+
 
     return (
       <FormItem
@@ -34,7 +35,7 @@ class CrossStreet1 extends React.Component {
           placeholder={loading ? 'Loading...' : 'Search'}
           onChange={onChange}
         >
-          {locations && uniq(map(locations, 'from_st')).map(location => (
+          {locations && uniq(map(locations.locations, 'from_st')).map(location => (
             <Option key={location} value={location}>{location}</Option>
           ))}
         </Select>

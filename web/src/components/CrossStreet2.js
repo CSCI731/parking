@@ -12,7 +12,7 @@ const Option = Select.Option;
 class CrossStreet2 extends React.Component {
   render() {
     const {
-      crossStreet2, onChange, onButtonClick, data: { loading, error, locations: { locations } },
+      crossStreet2, onChange, onButtonClick, data: { loading, error, locations },
     } = this.props;
     if (error) {
       const msg = (error.graphQLErrors.length > 0 && error.graphQLErrors.map(({ message }) => (
@@ -40,7 +40,7 @@ class CrossStreet2 extends React.Component {
 
               onChange={onChange}
             >
-              {locations && uniq(map(locations, 'to_st')).map(location => (
+              {locations && uniq(map(locations.locations, 'to_st')).map(location => (
                 <Option key={location} value={location}>{location}</Option>
               ))}
             </Select>
