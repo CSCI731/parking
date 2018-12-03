@@ -11,8 +11,10 @@ export default compose(
     },
     options: ({ boro, onStreet }) => ({
       variables: {
-        boro,
-        main_st: onStreet,
+        input: {
+          boro: [boro],
+          main_st: onStreet,
+        }
       }
     })
   }),
