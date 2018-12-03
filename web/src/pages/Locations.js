@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Table, Divider } from 'antd';
+import { Table, Divider, Button, Popconfirm, Icon, message } from 'antd';
 import { borough, sideOfStreet } from "../lib/utils";
 
 
@@ -47,6 +47,26 @@ class Locations extends React.Component {
     });
   };
 
+  handleRemove = (location) => {
+    const { mutate, data: { refetch } } = this.props;
+    this.setState({
+      refetching: true,
+    });
+    mutate({
+      variables: {
+        input: { _id: location._id },
+      }
+    }).then(() => {
+
+      refetch().then(() => {
+        this.setState({
+          refetching: false,
+        })
+      });
+    }).catch(err => {
+      message.error(err.message);
+    });
+  };
 
   render() {
     const { data: { loading, locations } } = this.props;
@@ -120,11 +140,17 @@ class Locations extends React.Component {
         key: 'action',
         render: (text, record) => (
           <span>
-            <Link to={`/admin/locations/${record._id}`}>View</Link>
+            <Link to={`/admin/locations/${record._id}`}><Button type="primary">View</Button></Link>
             <Divider type="vertical" />
             <a href="">Edit</a>
             <Divider type="vertical" />
-            <a href="">Delete</a>
+            <Popconfirm
+              title="Are you sure?"
+              onConfirm={() => this.handleRemove(record)}
+              icon={<Icon type="question-circle-o" style={{ color: 'red' }} />}
+            >
+            <Button type="primary">Remove</Button>
+            </Popconfirm>
           </span>
         )
       }
