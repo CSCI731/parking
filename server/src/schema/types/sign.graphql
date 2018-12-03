@@ -4,11 +4,32 @@ type Sign {
     order_no: String!
     sequence: Int!
     distance: Int!
+    arrow_pt: String
+    description: String
+    code: String!
+}
+
+input signsInput {
+    boro: Borough
+    order_no: String
+}
+
+type Query {
+    signsByStreet(boro: String!, main_st:String!, from_st: String!, to_st: String!): [Sign]
+    signs(input: signsInput!): [Sign]
+}
+
+input addSignInput {
+    _id: ID
+    boro: Borough!
+    order_no: String!
+    sequence: Int!
+    distance: Int!
     arrowPt: String
     description: String
     code: String!
 }
 
-type Query {
-    signsByStreet(boro: String!, main_st:String!, from_st: String!, to_st: String!): [Sign]
+type Mutation {
+    addSign(input: addSignInput!): Sign
 }
