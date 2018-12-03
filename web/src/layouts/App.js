@@ -13,6 +13,9 @@ import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import store from '../redux/store';
 import DashboardLayout from './Dashboard';
 import LoginLayout from './LoginLayout';
+import PrivateRoute from './PrivateRoute';
+import AdminLayout from './Admin';
+import PublicRoute from "./PublicRoute";
 
 const httpLink = new HttpLink({
   uri: process.env.REACT_APP_GRAPHQL_SERVER_URI,
@@ -31,7 +34,8 @@ const App = () => {
           <BrowserRouter>
             <Switch>
               <Route exact path="/" component={DashboardLayout} />
-              <Route path="/login" component={LoginLayout} />
+              <PublicRoute exact path="/login" component={LoginLayout} />
+              <PrivateRoute path="/admin" component={AdminLayout} />
             </Switch>
           </BrowserRouter>
         </div>

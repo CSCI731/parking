@@ -2,9 +2,10 @@ import store from 'store';
 import React from 'react';
 import Loading from '../components/Loading';
 import { graphql } from 'react-apollo';
+import verifyToken from '../gql/query/verifyToken';
 import renderForError from '../components/renderForError';
-import { Route, Redirect, withRouter } from 'react-router-dom';
 import renderWhileLoading from "../components/renderWhileLoading";
+import { Route, Redirect, withRouter } from 'react-router-dom';
 import { compose, withProps, branch, renderComponent } from 'recompose';
 
 class PrivateRoute extends React.Component {
@@ -28,11 +29,11 @@ export default compose(
   withRouter,
   withProps(() => {
     return {
-      redirect: `/admin/login`,
+      redirect: `/login`,
     }
   }),
   branch(
-    !store.get('token'),
+    () => !store.get('token'),
     renderComponent((props) => <Redirect to={props.redirect} />)
   ),
   graphql(verifyToken, {
@@ -42,9 +43,9 @@ export default compose(
       }
     }),
   }),
-  renderWhileLoading(Loading),
   renderForError((props) => {
     store.remove('token');
     return <Redirect to={props.redirect} />
   }),
+  renderWhileLoading(Loading, 'verifyToken'),
 )(PrivateRoute);
