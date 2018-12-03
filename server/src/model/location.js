@@ -11,7 +11,6 @@ const locationSchema = mongoose.Schema({
 });
 
 locationSchema.post('remove', async function (location) {
-  console.log(location);
   await SignModel.deleteMany({ boro: location.boro, order_no: location.order_no });
 });
 

@@ -31,15 +31,6 @@ mongoose.connect(MONGODB_URI, { useCreateIndex: true, useNewUrlParser: true }, a
     log(err.message);
     throw err;
   }
-
-  const admin = await UserModel.findOne({ email: 'admin@example.com' });
-
-  if (!admin) {
-    await UserModel.register(
-      { email: 'admin@example.com', roles: ['admin'] },
-      'nycparking',
-    );
-  }
 });
 
 const corsOptions = {
