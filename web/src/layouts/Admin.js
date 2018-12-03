@@ -5,7 +5,8 @@ import {
 } from 'antd';
 import { Switch } from "react-router-dom";
 import PrivateRoute from "./PrivateRoute";
-import LocationContainer from '../containers/Locations';
+import LocationsContainer from '../containers/Locations';
+import LocationContainer from '../containers/Location';
 
 const { Header, Content, Footer } = Layout;
 
@@ -39,9 +40,11 @@ class LoginLayout extends React.Component {
             </Col>
           </Row>
         </Header>
-        <Content>
+
+        <Content style={{ minHeight: '400px'}}>
           <Switch>
-            <PrivateRoute exact path={`${match.path}`} component={LocationContainer} />
+            <PrivateRoute exact path={match.path} component={LocationsContainer} />
+            <PrivateRoute exact path={`${match.path}/locations/:locationId`} component={LocationContainer} />
           </Switch>
         </Content>
         <Footer>

@@ -1,5 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Table, Divider } from 'antd';
+import { borough, sideOfStreet } from "../lib/utils";
 
 
 const pageSize = 10;
@@ -13,8 +15,8 @@ class Locations extends React.Component {
     }
   }
 
-  onChange = (pagination, filters, sorter) => {
-    const { data: { fetchMore, locations: { locations } } } = this.props;
+  onChange = (pagination, filters) => {
+    const { data: { fetchMore } } = this.props;
     const input = {};
 
 
@@ -23,6 +25,7 @@ class Locations extends React.Component {
         input.boro = filters.boro;
       }
     }
+
     this.setState({
       current: pagination.current,
       refetching: true,
@@ -80,18 +83,7 @@ class Locations extends React.Component {
           return location.boro === value;
         },
         render: (text) => {
-          switch (text) {
-            case 'B':
-              return 'Bronx';
-            case 'K':
-              return 'Brooklyn';
-            case 'M':
-              return 'Manhattan';
-            case 'Q':
-              return 'Queens';
-            case 'S':
-              return 'Staten Island';
-          }
+          return borough(text);
         },
         sorter: (a, b) => {
           if (a.boro < b.boro) {
@@ -120,17 +112,7 @@ class Locations extends React.Component {
         title: 'Side of street',
         dataIndex: 'sos',
         render: (text) => {
-          switch (text) {
-            case 'N':
-              return 'North';
-            case 'S':
-              return 'South';
-            case 'E':
-              return 'East';
-            case 'W':
-              return 'West';
-
-          }
+          return sideOfStreet(text);
         },
       },
       {
@@ -138,7 +120,7 @@ class Locations extends React.Component {
         key: 'action',
         render: (text, record) => (
           <span>
-            <a href="">View</a>
+            <Link to={`/admin/locations/${record._id}`}>View</Link>
             <Divider type="vertical" />
             <a href="">Edit</a>
             <Divider type="vertical" />

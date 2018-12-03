@@ -2,8 +2,6 @@ import { compose } from 'recompose';
 import LocationsPage from '../pages/Locations';
 import { graphql } from 'react-apollo';
 import locationsQuery from '../gql/query/locations';
-import renderWhileLoading from '../components/renderWhileLoading';
-import Loading from '../components/Loading';
 import renderForError from "../components/renderForError";
 import Error from '../components/Error';
 
