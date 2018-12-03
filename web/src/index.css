@@ -28,7 +28,7 @@ code {
 
 .logo {
     height: 48px;
-    background: url(./img/logo.png);
+    background: url(./img/logo.png) no-repeat;
     border-radius: 6px;
     margin: 16px;
 }
@@ -49,3 +49,4 @@ code {
 .login-form-button {
     width: 100%;
 }
+
