@@ -49,7 +49,6 @@ const corsOptions = {
 
 const getCurrentUser = async (req) => {
   const authorization = req.headers['authorization'];
-
   let user;
   if (authorization) {
     // "Bearer [token]"
@@ -62,7 +61,7 @@ const getCurrentUser = async (req) => {
       const data = await jwt.verify(token, process.env.JWT_SECRET);
       user = await UserModel.findById(data._id);
     } catch (e) {
-
+      user = null
     }
 
     return user;
