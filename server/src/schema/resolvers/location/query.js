@@ -6,6 +6,7 @@ import Location from 'model/location';
 import Geonames from 'geonames.js';
 import Street from 'lib/street';
 import { createClient } from '@google/maps';
+import { UserInputError } from 'apollo-server-express';
 
 const googleMapsClient = createClient({
   key: process.env.GMAPS_API_KEY,
@@ -18,7 +19,12 @@ const Query = {};
 
 Query.location = async (root, args) => {
   const { _id } = args;
-  return Location.findOne({ _id }).exec();
+  const location = await Location.findById(_id);
+  if (!location) {
+    throw new UserInputError('Location not found.');
+  }
+
+  return location;
 };
 
 
