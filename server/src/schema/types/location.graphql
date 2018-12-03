@@ -21,16 +21,21 @@ type StreetNames {
 }
 
 input locationsInput {
-    boro: Borough
+    boro: [Borough]
     main_st: String
     from_st: String
     to_st: String
 }
 
+type LocationsOutput {
+    totalCount: Int!
+    locations: [Location]!
+}
+
 type Query {
     location(_id: String, boro: Borough, main_st: String, from_st: String): Location
     locationsByLatLng(lat: Float!, lng: Float!): StreetNames!
-    locations(input: locationsInput!, offset: Int, limit: Int): [Location]
+    locations(input: locationsInput!, offset: Int, limit: Int): LocationsOutput!
     reverseGeocode(lat: Float!, lng: Float!):String
 }
 
