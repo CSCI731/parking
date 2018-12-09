@@ -8,6 +8,7 @@ import http from 'http';
 import https from 'https';
 import path from 'path';
 import jwt from 'jsonwebtoken';
+import db from './db';
 import { ApolloServer, AuthenticationError } from 'apollo-server-express';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
@@ -23,15 +24,7 @@ const log = debug('server');
 
 // env variables
 const PORT = process.env.PORT || 3000;
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/nycparking';
 
-mongoose.Promise = global.Promise;
-mongoose.connect(MONGODB_URI, { useCreateIndex: true, useNewUrlParser: true }, async function (err) {
-  if (err) {
-    log(err.message);
-    throw err;
-  }
-});
 
 const corsOptions = {
   origin: process.env.CORS_ORIGINS.split(','),
@@ -92,14 +85,18 @@ app.all('*', (request, response) => {
 
 
 export const start = () => {
-  server.listen({ port: PORT }, () => {
-    log(`Listening on port: ${PORT}`);
+  db.connect(function () {
+    server.listen({ port: PORT }, () => {
+      log(`Listening on port: ${PORT}`);
+    });
   });
 };
 
 export const stop = () => {
   server.close(() => {
-    log(`Shut down on port: ${PORT}`);
+    db.disconnect(function () {
+      log(`Shut down on port: ${PORT}`);
+    });
   });
 };
 

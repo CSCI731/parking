@@ -11,7 +11,8 @@
     "build": "npm run clean && mkdir -p dist && babel src -s -D -d dist",
     "test": "jest --watch",
     "lint": "eslint ./; exit 0",
-    "lint:fix": "eslint ./ --fix; exit 0"
+    "lint:fix": "eslint ./ --fix; exit 0",
+    "user:add": "node -r dotenv/config -r @babel/register src/lib/account.js"
   },
   "keywords": [],
   "author": "",
@@ -40,6 +41,7 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^5.0.1",
+    "prompts": "^2.0.0",
     "street-types": "^1.0.1",
     "superagent": "^4.0.0-beta.5"
   },
