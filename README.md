@@ -71,6 +71,17 @@ or
 yarn dev
 ```
 
+How to create user
+```
+yarn user:add
+
+#### It will prompt #####
+Input email address: [email]
+Input password: [password]
+Input roles, separate by comma: [admin|user]
+
+```
+
 Go to web side directory
 ```
 cd parking/web
